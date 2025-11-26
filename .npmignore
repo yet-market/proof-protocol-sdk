@@ -1,0 +1,68 @@
+# Source files (only ship dist/)
+src/
+tests/
+test/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Examples and demos
+examples/
+demo/
+
+# Config files
+tsconfig.json
+jest.config.js
+.eslintrc
+.eslintrc.js
+.prettierrc
+.prettierrc.js
+
+# CI/CD
+.github/
+
+# Documentation source (keep docs/ for users)
+# docs/ - keeping this for now
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Misc
+*.tgz
+.cache/
+temp/
+tmp/
+
+# Development files
+NPM_PUBLISH_GUIDE.md
+TODO.md
+NOTES.md

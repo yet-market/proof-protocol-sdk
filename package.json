@@ -1,0 +1,73 @@
+{
+  "name": "@proof-protocol/sdk",
+  "version": "1.0.0",
+  "description": "Official TypeScript/JavaScript SDK for PROOF Protocol - MiFID II compliance blockchain platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "dev": "tsc --watch",
+    "lint": "echo 'Add linter when ready'",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yet-market/proof-protocol-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yet-market/proof-protocol-sdk/issues"
+  },
+  "homepage": "https://proofprotocol.eu/docs",
+  "keywords": [
+    "proof-protocol",
+    "mifid-ii",
+    "compliance",
+    "blockchain",
+    "audit-trail",
+    "polygon",
+    "fintech",
+    "regtech",
+    "typescript",
+    "sdk",
+    "api",
+    "verification"
+  ],
+  "author": "Yet Technologies <proof@yet.lu>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "ethers": "^6.15.0",
+    "axios": "^1.6.0",
+    "node-fetch": "^3.3.0",
+    "kubo-rpc-client": "^5.3.0",
+    "multiformats": "^13.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.0",
+    "ts-jest": "^29.1.0"
+  },
+  "peerDependencies": {
+    "ethers": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
