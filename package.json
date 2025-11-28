@@ -11,8 +11,7 @@
     "CHANGELOG.md"
   ],
   "directories": {
-    "example": "examples",
-    "test": "tests"
+    "example": "examples"
   },
   "scripts": {
     "build": "tsc",

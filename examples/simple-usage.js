@@ -10,7 +10,7 @@ async function main() {
   // 1. Initialize the client (one-time setup)
   const proof = new ProofClient({
     privateKey: process.env.PRIVATE_KEY, // Your wallet private key
-    network: 'amoy' // Using Amoy testnet (POL gas token)
+    network: 'polygon' // Polygon mainnet
   });
 
   // 2. Check your balance
@@ -66,7 +66,7 @@ async function insuranceExample() {
 
   const proof = new ProofClient({
     privateKey: process.env.PRIVATE_KEY,
-    network: 'amoy'
+    network: 'polygon'
   });
 
   // Simulate checking a broker's license
@@ -116,7 +116,7 @@ async function batchExample() {
 
   const proof = new ProofClient({
     privateKey: process.env.PRIVATE_KEY,
-    network: 'amoy'
+    network: 'polygon'
   });
 
   // Collect multiple API calls

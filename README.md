@@ -18,7 +18,7 @@ const { ProofClient } = require('@proof-protocol/sdk');
 // Initialize once
 const proof = new ProofClient({
   privateKey: process.env.PRIVATE_KEY,
-  network: 'amoy' // Polygon Amoy testnet (uses POL)
+  network: 'polygon' // Polygon mainnet
 });
 
 // Before: const response = await fetch('https://api.example.com/data');
@@ -53,7 +53,7 @@ const { ProofClient } = require('@proof-protocol/sdk');
 
 const proof = new ProofClient({
   privateKey: process.env.PRIVATE_KEY,
-  network: 'amoy'
+  network: 'polygon'
 });
 
 // Record any API call
@@ -185,7 +185,7 @@ const proof = new ProofClient({
   privateKey: 'your-private-key',      // Wallet private key
 
   // Network
-  network: 'amoy',                     // 'amoy' | 'polygon' | 'local'
+  network: 'polygon',                     // 'amoy' | 'polygon' | 'local'
   rpcUrl: 'custom-rpc-url',           // Optional custom RPC
 
   // Features
@@ -253,18 +253,13 @@ Gets usage statistics for an address.
 - **Approval**: SDK auto-approves tokens by default (configurable)
 - **Encryption**: Sensitive data encrypted before IPFS storage
 
-## Networks
+## Network
 
-### Amoy Testnet (Development)
-- Chain ID: 80002
-- RPC: https://rpc-amoy.polygon.technology/
-- Faucet: https://faucet.polygon.technology/
-- Explorer: https://amoy.polygonscan.com/
-
-### Polygon Mainnet (Production)
+### Polygon Mainnet
 - Chain ID: 137
 - Token: POL (formerly MATIC)
 - Explorer: https://polygonscan.com/
+- RPC: https://polygon-rpc.com/
 
 ## Examples
 
@@ -277,10 +272,9 @@ See the `/examples` directory for:
 
 ## Support
 
-- Documentation: https://docs.proof-protocol.io
-- GitHub: https://github.com/proof-protocol/sdk
-- Discord: https://discord.gg/proof-protocol
-- Email: support@proof-protocol.io
+- Documentation: https://proofprotocol.eu/docs
+- GitHub: https://github.com/yet-market/proof-protocol-sdk
+- Email: proof@yet.lu
 
 ## License
 

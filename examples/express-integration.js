@@ -73,7 +73,7 @@ app.get('/api/claim/:claimId', async (req, res) => {
 const { ProofClient } = require('@proof-protocol/sdk');
 const proofClient = new ProofClient({
   privateKey: process.env.PRIVATE_KEY,
-  network: 'amoy'
+  network: 'polygon'
 });
 
 app.get('/api/manual-example/:id', async (req, res) => {

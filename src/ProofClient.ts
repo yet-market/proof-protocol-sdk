@@ -19,7 +19,7 @@ export class ProofClient {
   constructor(config: ProofConfig) {
     this.config = {
       ...config,
-      network: config.network || 'amoy', // Default to Amoy testnet
+      network: config.network || 'polygon', // Default to Polygon mainnet
       autoApprove: config.autoApprove !== false, // Default true
       batchSize: config.batchSize || 100,
       ipfsGateway: config.ipfsGateway || 'https://ipfs.io/ipfs/'
@@ -349,7 +349,7 @@ export class ProofClient {
       'local': 'http://localhost:8545'
     };
 
-    return this.config.rpcUrl || networks[this.config.network || 'amoy'];
+    return this.config.rpcUrl || networks[this.config.network || 'polygon'];
   }
 
   private getContractAddresses(): { token: string; registry: string } {
@@ -369,7 +369,7 @@ export class ProofClient {
       }
     };
 
-    return addresses[this.config.network || 'amoy'];
+    return addresses[this.config.network || 'polygon'];
   }
 
   private getExplorerUrl(txHash: string): string {
@@ -379,7 +379,7 @@ export class ProofClient {
       'local': `http://localhost:3000/tx/${txHash}`
     };
 
-    return explorers[this.config.network || 'amoy'];
+    return explorers[this.config.network || 'polygon'];
   }
 
   private hashData(data: any): string {
