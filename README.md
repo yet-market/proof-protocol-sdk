@@ -2,6 +2,8 @@
 
 The PROOF Protocol SDK lets you create immutable, timestamped records of API interactions on the blockchain. It's designed for compliance, auditing, and legal verification requirements with minimal code changes.
 
+**⚠️ Production Ready**: This SDK operates on Polygon mainnet. All transactions cost real POL tokens and PROOF tokens. Ensure you understand the costs before deploying to production.
+
 ## Quick Start
 
 ### Installation
