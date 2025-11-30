@@ -187,8 +187,8 @@ const proof = new ProofClient({
   privateKey: 'your-private-key',      // Wallet private key
 
   // Network
-  network: 'polygon',                     // 'amoy' | 'polygon' | 'local'
-  rpcUrl: 'custom-rpc-url',           // Optional custom RPC
+  network: 'polygon',                   // 'polygon' | 'local'
+  rpcUrl: 'custom-rpc-url',             // Optional custom RPC
 
   // Features
   autoApprove: true,                   // Auto-approve PROOF tokens

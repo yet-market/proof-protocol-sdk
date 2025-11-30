@@ -4,7 +4,7 @@
  */
 
 import { ProofClient } from './ProofClient';
-import { ProofMiddlewareOptions, ProofReceipt } from './types';
+import { ProofMiddlewareOptions, ProofReceipt, ProofResponse } from './types';
 
 export class ProofMiddleware {
   private client: ProofClient;
@@ -18,11 +18,10 @@ export class ProofMiddleware {
     // Initialize ProofClient if not provided
     if (options.client) {
       this.client = options.client;
-    } else if (options.privateKey || options.apiKey) {
+    } else if (options.privateKey) {
       this.client = new ProofClient({
         privateKey: options.privateKey,
-        apiKey: options.apiKey,
-        network: 'amoy'
+        network: 'polygon' // Default to mainnet
       });
     } else {
       throw new Error('ProofMiddleware requires either a ProofClient instance or credentials');
@@ -230,11 +229,14 @@ export class ProofMiddleware {
       headers: responseData.headers
     });
 
-    // Add URL to response
-    (mockResponse as any).url = requestData.url;
+    // Create a response with URL property using Object.defineProperty for proper typing
+    Object.defineProperty(mockResponse, 'url', {
+      value: requestData.url,
+      writable: false
+    });
 
     // Use the client's record method
-    const recordedResponse = await this.client.record(
+    const recordedResponse: ProofResponse = await this.client.record(
       Promise.resolve(mockResponse),
       {
         method: requestData.method,
@@ -261,7 +263,7 @@ export class ProofMiddleware {
     });
 
     // Process batch if it reaches the size limit
-    if (this.batchQueue.length >= (this.options.batchInterval || 100)) {
+    if (this.batchQueue.length >= (this.options.batchSize || 100)) {
       this.processBatch();
     }
   }

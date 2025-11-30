@@ -1,6 +1,6 @@
 import { ethers, Contract, Wallet, JsonRpcProvider } from 'ethers';
 import crypto from 'crypto';
-import { ProofConfig, APIRecord, RecordOptions, ProofReceipt, VisibilityLevel } from './types';
+import { ProofConfig, APIRecord, RecordOptions, ProofReceipt, ProofResponse, VisibilityLevel } from './types';
 import { PROOF_TOKEN_ABI, PROOF_REGISTRY_ABI } from './abis';
 import { IPFSService } from './ipfs';
 
@@ -56,10 +56,10 @@ export class ProofClient {
    * @param options - Optional recording options
    * @returns Enhanced response with proof receipt
    */
-  async record<T = any>(
+  async record(
     fetchPromise: Promise<Response>,
     options: RecordOptions = {}
-  ): Promise<Response & { proof: ProofReceipt }> {
+  ): Promise<ProofResponse> {
     try {
       // 1. Execute the API call
       const startTime = Date.now();
@@ -118,7 +118,7 @@ export class ProofClient {
       const receipt = await tx.wait();
 
       // 9. Extract event data
-      const event = receipt.logs.find((log: any) => {
+      const event = receipt.logs.find((log: { topics: readonly string[]; data: string }) => {
         try {
           const parsed = this.proofRegistry.interface.parseLog(log);
           return parsed?.name === 'RecordStored';
@@ -127,7 +127,16 @@ export class ProofClient {
         }
       });
 
-      const recordId = event ? this.proofRegistry.interface.parseLog(event)?.args.recordId || tx.hash : tx.hash;
+      if (!event) {
+        throw new Error('RecordStored event not found in transaction receipt. Transaction may have failed.');
+      }
+
+      const parsedEvent = this.proofRegistry.interface.parseLog(event);
+      if (!parsedEvent?.args.recordId) {
+        throw new Error('Failed to parse recordId from RecordStored event.');
+      }
+
+      const recordId = parsedEvent.args.recordId;
 
       // 10. Create verification certificate
       const certificate = await this.ipfs.createCertificate({
@@ -136,7 +145,7 @@ export class ProofClient {
         timestamp: startTime,
         requestUrl: requestData.url,
         responseStatus: responseData.status,
-        network: this.config.network || 'amoy'
+        network: this.config.network || 'polygon'
       });
 
       // 11. Create proof receipt
@@ -155,13 +164,13 @@ export class ProofClient {
         }
       };
 
-      // 12. Attach proof to response
-      (response as any).proof = proofReceipt;
+      // 12. Create enhanced response with proof attached
+      const proofResponse = Object.assign(response, { proof: proofReceipt }) as ProofResponse;
 
       // Emit event for monitoring
       this.emit('recorded', proofReceipt);
 
-      return response as Response & { proof: ProofReceipt };
+      return proofResponse;
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -186,6 +195,7 @@ export class ProofClient {
         timestamp: record.timestamp.toString(),
         recorder: record.recorder,
         ipfsHash: record.ipfsHash,
+        visibility: record.visibility,
         exists: true
       };
     } catch (error) {
@@ -241,7 +251,7 @@ export class ProofClient {
         certificateUrl: `${this.config.certificateBaseUrl}batch/${receipt.hash}`,
         ipfsUrl: `${this.config.ipfsGateway}${ipfsHash}`,
         cost: {
-          proofTokens: (records.length * 8).toString(), // Bulk discount
+          proofTokens: ethers.formatEther(await this.proofRegistry.calculateBatchPrice(records.length, this.signer.address)),
           gasInPOL: ethers.formatEther(receipt.gasUsed * receipt.gasPrice)
         }
       };
@@ -277,7 +287,7 @@ export class ProofClient {
     const balance = await this.proofToken.balanceOf(addr);
 
     return {
-      recordCount: recordCount.toString(),
+      recordCount: Number(recordCount),
       proofBalance: ethers.formatEther(balance),
       totalSpent: ethers.formatEther(recordCount * 10n * 10n**18n) // 10 PROOF per record
     };
@@ -344,7 +354,6 @@ export class ProofClient {
 
   private getRpcUrl(): string {
     const networks: { [key: string]: string } = {
-      'amoy': 'https://rpc-amoy.polygon.technology/',
       'polygon': 'https://polygon-rpc.com/',
       'local': 'http://localhost:8545'
     };
@@ -353,12 +362,8 @@ export class ProofClient {
   }
 
   private getContractAddresses(): { token: string; registry: string } {
-    // V3 Contract addresses - deployed on Polygon mainnet
+    // V3 Contract addresses - Polygon mainnet from deployment-complete.json
     const addresses: { [key: string]: { token: string; registry: string } } = {
-      'amoy': {
-        token: process.env.PROOF_TOKEN_ADDRESS || '0x4c9A2a4D1686f7F468400E0c8fcB86d3FCbF5B21', // Same token on all networks
-        registry: process.env.PROOF_REGISTRY_ADDRESS || '0x5Fa8A332170B7Dc759Baac5a81CbF8eE0573599e' // ProofRegistryV3
-      },
       'polygon': {
         token: '0x4c9A2a4D1686f7F468400E0c8fcB86d3FCbF5B21', // ProofToken (mainnet)
         registry: '0x5Fa8A332170B7Dc759Baac5a81CbF8eE0573599e' // ProofRegistryV3 (mainnet)
@@ -374,7 +379,6 @@ export class ProofClient {
 
   private getExplorerUrl(txHash: string): string {
     const explorers: { [key: string]: string } = {
-      'amoy': `https://amoy.polygonscan.com/tx/${txHash}`,
       'polygon': `https://polygonscan.com/tx/${txHash}`,
       'local': `http://localhost:3000/tx/${txHash}`
     };
@@ -396,7 +400,7 @@ export class ProofClient {
   }
 
   private async ensureTokenApproval(recordCount: number = 1): Promise<void> {
-    const recordPrice = await this.proofRegistry.recordPrice();
+    const recordPrice = await this.proofRegistry.baseRecordPrice();
     const totalCost = recordPrice * BigInt(recordCount);
 
     const currentAllowance = await this.proofToken.allowance(

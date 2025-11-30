@@ -23,21 +23,27 @@ export const PROOF_TOKEN_ABI = [
 ];
 
 export const PROOF_REGISTRY_ABI = [
-  // Read functions
-  "function recordPrice() view returns (uint256)",
-  "function burnPercentage() view returns (uint256)",
+  // Read functions (V3)
+  "function baseRecordPrice() view returns (uint256)",
   "function userRecordCount(address user) view returns (uint256)",
-  "function verifyRecord(bytes32 recordId) view returns (bool exists, tuple(bytes32 requestHash, bytes32 responseHash, uint256 timestamp, address recorder, string ipfsHash, bool exists) record)",
-  "function calculateBatchPrice(uint256 count) view returns (uint256)",
+  "function verifyRecord(bytes32 recordId) view returns (bool exists, tuple(bytes32 requestHash, bytes32 responseHash, uint256 timestamp, address recorder, string ipfsHash, uint8 visibility, bool exists) record)",
+  "function calculateBatchPrice(uint256 count, address recorder) view returns (uint256)",
   "function getUserRecords(address user) view returns (bytes32[])",
-  "function getStatistics() view returns (uint256 totalRecords, uint256 totalUsers, uint256 contractBalance)",
+  "function getStatistics() view returns (uint256 totalRecords, uint256 contractBalance, uint256 currentBurnRate, uint256 currentPrice)",
+  "function getPricingInfo() view returns (uint256 recordPrice, uint256 proofPriceUSD, uint256 burnRate, bool usingManualPrice)",
+  "function getCurrentBurnRate() view returns (uint256)",
+  "function sharedAccess(bytes32 recordId, address viewer) view returns (bool)",
 
-  // Write functions
-  "function storeAPIRecord(bytes32 requestHash, bytes32 responseHash, string ipfsHash) returns (bytes32)",
-  "function storeBatchRecords(bytes32[] requestHashes, bytes32[] responseHashes, string ipfsHash) returns (bytes32)",
+  // Write functions (V3 with visibility parameter)
+  "function storeAPIRecord(bytes32 requestHash, bytes32 responseHash, string ipfsHash, uint8 visibility) returns (bytes32)",
+  "function storeBatchRecords(bytes32[] requestHashes, bytes32[] responseHashes, string ipfsHash, uint8 visibility) returns (bytes32)",
+  "function grantAccess(bytes32 recordId, address viewer)",
+  "function revokeAccess(bytes32 recordId, address viewer)",
 
-  // Events
-  "event RecordStored(bytes32 indexed recordId, address indexed recorder, bytes32 requestHash, bytes32 responseHash, uint256 timestamp, string ipfsHash)",
-  "event BatchRecordStored(bytes32 indexed batchId, address indexed recorder, uint256 recordCount, uint256 timestamp, string ipfsHash)",
-  "event TokensCollected(address indexed from, uint256 amount, uint256 burned)"
+  // Events (V3)
+  "event RecordStored(bytes32 indexed recordId, address indexed recorder, bytes32 requestHash, bytes32 responseHash, uint256 timestamp, string ipfsHash, uint8 visibility)",
+  "event BatchRecordStored(bytes32 indexed batchId, address indexed recorder, uint256 recordCount, uint256 timestamp, string ipfsHash, uint8 visibility)",
+  "event TokensCollected(address indexed from, uint256 amount, uint256 burned, uint256 burnRate)",
+  "event AccessGranted(bytes32 indexed recordId, address indexed viewer)",
+  "event AccessRevoked(bytes32 indexed recordId, address indexed viewer)"
 ];

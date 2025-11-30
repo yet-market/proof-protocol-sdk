@@ -435,4 +435,4 @@ for (const record of records) {
 
 ---
 
-**Questions?** Contact support@proof-protocol.io
+**Questions?** Contact support@proof-protocol.eu

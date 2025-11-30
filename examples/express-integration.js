@@ -171,7 +171,7 @@ app.listen(PORT, async () => {
   console.log(`\n🚀 PROOF Protocol Express Server`);
   console.log(`================================`);
   console.log(`Server running on port ${PORT}`);
-  console.log(`Network: Amoy testnet (POL gas token)`);
+  console.log(`Network: Polygon mainnet (POL gas token)`);
   console.log(`\nEndpoints:`);
   console.log(`  GET  /api/broker/:id        - Verify broker (auto-recorded)`);
   console.log(`  POST /api/verify-policy     - Verify policy (auto-recorded)`);
@@ -193,10 +193,10 @@ app.listen(PORT, async () => {
     console.log(`  POL: ${balance.pol} (for gas)`);
 
     if (parseFloat(balance.proof) < 100) {
-      console.log(`\n⚠️  Warning: Low PROOF balance. Buy more at https://proof-protocol.io`);
+      console.log(`\n⚠️  Warning: Low PROOF balance. Buy more at https://www.proof-protocol.eu`);
     }
     if (parseFloat(balance.pol) < 0.1) {
-      console.log(`⚠️  Warning: Low POL balance. Get test POL from faucet.`);
+      console.log(`⚠️  Warning: Low POL balance. Acquire POL tokens for gas.`);
     }
   } catch (error) {
     console.log(`\n⚠️  Could not check balance. Make sure PRIVATE_KEY is set.`);

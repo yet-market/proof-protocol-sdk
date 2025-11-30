@@ -1,6 +1,6 @@
 {
   "name": "@proof-protocol/sdk",
-  "version": "1.0.0",
+  "version": "3.0.0-beta",
   "description": "Official TypeScript/JavaScript SDK for PROOF Protocol - MiFID II compliance blockchain platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -8,7 +8,7 @@
  *
  * const proof = new ProofClient({
  *   privateKey: process.env.PRIVATE_KEY,
- *   network: 'amoy'
+ *   network: 'polygon'
  * });
  *
  * // Record any API call with one line
@@ -27,6 +27,7 @@ export * from './types';
 export type {
   ProofConfig,
   ProofReceipt,
+  ProofResponse,
   APIRecord,
   RecordOptions,
   TokenBalance,
@@ -37,7 +38,7 @@ export type {
 export { VisibilityLevel } from './types';
 
 // Export version
-export const VERSION = '2.0.0'; // V3 contracts with privacy controls
+export const VERSION = '3.0.0-beta'; // V3 contracts with privacy controls
 
 // Export default instance factory
 import type { ProofClient as ProofClientType } from './ProofClient';

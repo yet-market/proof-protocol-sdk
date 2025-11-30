@@ -3,12 +3,11 @@
  */
 
 export interface ProofConfig {
-  // Required
-  privateKey?: string;
-  apiKey?: string; // Alternative to private key
+  // Required - private key for signing blockchain transactions
+  privateKey: string;
 
   // Network configuration
-  network?: 'amoy' | 'polygon' | 'local';
+  network?: 'polygon' | 'local';
   rpcUrl?: string; // Custom RPC URL
 
   // Optional settings
@@ -43,7 +42,6 @@ export interface RecordOptions {
   metadata?: { [key: string]: any };
   visibility?: VisibilityLevel; // V3: Privacy control
   sharedWith?: string[]; // V3: Addresses to share with (for SHARED visibility)
-  useMetaTransaction?: boolean; // V3: Use gasless transaction
 }
 
 export interface ProofReceipt {
@@ -92,14 +90,22 @@ export interface UserStatistics {
   totalSpent: string;
 }
 
+/**
+ * Enhanced Response type that includes the proof receipt
+ * Used as the return type for ProofClient.record()
+ */
+export interface ProofResponse extends Response {
+  proof: ProofReceipt;
+}
+
 // Express middleware types
 export interface ProofMiddlewareOptions {
   client?: any; // ProofClient instance (avoid circular dependency)
-  apiKey?: string;
-  privateKey?: string;
+  privateKey?: string; // Required if client not provided
   patterns?: string[]; // URL patterns to record
   excludePatterns?: string[]; // URL patterns to exclude
   batchInterval?: number; // Batch recording interval in ms
+  batchSize?: number; // Max batch size before processing (default: 100)
 }
 
 // Error types
